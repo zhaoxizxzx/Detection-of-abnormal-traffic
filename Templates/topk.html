@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <!-- 引入 ECharts 文件 -->
+    <title>异常流量检测</title>
+    <script src="../static/echarts.min.js"></script>
+
+</head>
+
+
+
+<body bgcolor="#fff0f5">
+
+<header>
+<h1 style="color: darkgray">异常流量检测</h1>
+</header>
+
+<aside>
+    <h1>阈值φ:{{K1}}</h1>
+    <h1>阈值Φ:{{K2}}</h1>
+</aside>
+
+<section>
+<div id="left" style="width:600px;float:left;">
+<p>
+ <!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+    <div id="main" style="width: 500px;height:500px;"></div>
+    <script type="text/javascript">
+        // 基于准备好的dom，初始化echarts实例
+    //     var myChart = echarts.init(document.getElementById('main'));
+    //     var option = {
+    //         title: {
+    //                 text: '总包长随总数量变化折现图'
+    //             },
+    //         xAxis: {
+    //             type: 'category',
+    //             data: ['1k', '2k', '3k', '4k', '5k', '6k', '7k','8k','9k','10k']
+    //         },
+    //         yAxis: {
+    //             type: 'value'
+    //         },
+    //         series: [{
+    //             data: ['{{p[0]}}','{{p[1]}}', '{{p[2]}}', '{{p[3]}}', '{{p[4]}}', '{{p[5]}}', '{{p[6]}}', '{{p[7]}}', '{{p[8]}}', '{{p[9]}}'],
+    //             type: 'line'
+    //         }]
+    //         // series: [{
+    //         //     data: ['{{f[0]}}','{{f[1]}}', '{{f[2]}}', '{{f[3]}}', '{{f[4]}}', '{{f[5]}}', '{{f[6]}}', '{{f[7]}}', '{{f[8]}}', '{{f[9]}}'],
+    //         //     type: 'line'
+    //         // }]
+    //     };
+    // myChart.setOption(option);
+    var chartDom = document.getElementById('main');
+    var myChart = echarts.init(chartDom);
+    var option;
+
+    var colors = ['#5470C6', '#91CC75', '#EE6666'];
+
+    option = {
+    color: colors,
+
+    tooltip: {
+        trigger: 'axis',
+        axisPointer: {
+            type: 'cross'
+        }
+    },
+    grid: {
+        right: '20%'
+    },
+    toolbox: {
+        feature: {
+            dataView: {show: true, readOnly: false},
+            restore: {show: true},
+            saveAsImage: {show: true}
+        }
+    },
+    // legend: {
+    //     data: ['蒸发量', '降水量', '平均温度']
+    // },
+    xAxis: [
+        {
+            type: 'category',
+            axisTick: {
+                alignWithLabel: true
+            },
+            data: ['1k', '2k', '3k', '4k', '5k', '6k', '7k','8k','9k','10k']
+        }
+    ],
+    yAxis: [
+        {
+            type: 'value',
+            name: '包长',
+            position: 'right',
+            axisLine: {
+                show: true,
+                lineStyle: {
+                    color: colors[0]
+                }
+            },
+            axisLabel: {
+                formatter: '{value}'
+            }
+        },
+        {
+            type: 'value',
+            name: '包数',
+            position: 'left',
+            axisLine: {
+                show: true,
+                lineStyle: {
+                    color: colors[2]
+                }
+            },
+            axisLabel: {
+                formatter: '{value}'
+            }
+        }
+    ],
+    series: [
+        {
+            name: '包长',
+            type: 'line',
+            data: ['{{p[0]}}','{{p[1]}}', '{{p[2]}}', '{{p[3]}}', '{{p[4]}}', '{{p[5]}}', '{{p[6]}}', '{{p[7]}}', '{{p[8]}}', '{{p[9]}}']
+        },
+        {
+            name: '包数',
+            type: 'line',
+            color: colors[2],
+            yAxisIndex: 1,
+            data: ['{{f[0]}}','{{f[1]}}', '{{f[2]}}', '{{f[3]}}', '{{f[4]}}', '{{f[5]}}', '{{f[6]}}', '{{f[7]}}', '{{f[8]}}', '{{f[9]}}']
+        }
+    ]
+};
+
+option && myChart.setOption(option);
+
+    </script>
+    </p>
+
+</div>
+
+<div id="right" style="color: gray;width:600px;float:left;">
+    <h1 style="color: pink;background-color: darkgrey">异常流list：</h1>
+    <h2 style="color: darkgrey">(ip_src, sport, ip_dst, dport, proto)</h2>
+ {% for cnt in pa %}
+        {% if pa[cnt] >= K2 or fre[cnt]>= K1 %}
+            {{cnt}}<br>
+        {% endif %}
+     {% endfor %}
+</div>
+
+
+
+
+
+</section>
+
+
+<footer>
+zhaoxizxzx
+</footer>
+
+
+<style>
+header {
+    background-color:black;
+    color:darkgrey;
+    text-align:center;
+    padding:5px;
+
+}
+
+section {
+    float:left;
+    padding:10px;
+}
+
+footer {
+    background-color:black;
+    color:darkgrey;
+    clear:both;
+    text-align:center;
+    padding:5px;
+}
+</style>
+
+
+</body>
+
+</html>
